@@ -5,12 +5,13 @@
 The Bento Macropad is a 5-key macropad with rotary encoder designed by Dwin17 (Discord: **Dwin#3766**, Reddit: **nguyedt**) with PCB designed by coarse (keyboard.coarse.tech).
 
 **Key features include in this fork:**
-- Powered by QMK Firmware
-- VIAL Support
+- Powered by [QMK Firmware](https://qmk.fm/)
+- [VIAL](https://get.vial.today/) Support
 - EC11 Rotary Encoder
 
-* Keyboard Maintainer: [restuindrawan](https://github.com/restuindrawan)
+________________________________________________________________________________________________________________________________________________________________
 
+* Keyboard Maintainer: [restuindrawan](https://github.com/restuindrawan)
 * Hardware Supported: *The PCBs, controllers supported*
 Pro Micro (or equivalent)
 
