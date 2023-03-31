@@ -15,40 +15,62 @@
  */
 #include QMK_KEYBOARD_H
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    /*
-        |                  |          | Knob 2: Vol Up/Dn |
-        |  Toggle Layer 1  |    Up    |    Press: Mute    |
-        |      Left        |   Down   |      Right        |
-     */
-    [0] = LAYOUT(
-        MO(1), KC_MYCM, KC_MUTE,
-        KC_MPRV , KC_MPLY  , KC_MNXT
-    ),
-    /*
-        |               |   Increase Brightness  |     Mute   |
-        |    RGB Cycle  |   Decrease Brightness  |  Hue Cycle |
-     */
-    [1] = LAYOUT(
-        _______  , RGB_VAI, KC_MUTE,
-        RGB_MOD, RGB_VAD, RGB_HUI
-    ),
+enum layer_names { _MEDIA, _BROWSER, _MACRO, _FUNC };
 
+enum custom_keycodes {
+  KC_CYCLE_LAYERS = SAFE_RANGE,
 };
 
-void encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    /*
+        |                  |                    |  Knob : Vol Up/Dn |
+        |      Mail        |         Play       |    Press: Mute    |
+        |      Prev        |         Next       |  Cycle Layers     |
+     */
+    [_MEDIA] =
+        LAYOUT(KC_MAIL, KC_MPLY, KC_MUTE, KC_MPRV, KC_MNXT, KC_CYCLE_LAYERS),
+    /*
+        |                  |                     |  Knob : Scroll Up/Down  |
+        |       Back       |   Fwd               |    Press: Stop    |
+        |     PrevTab      | NextTab             |   Cycle Layers    |
+     */
+    [_BROWSER] = LAYOUT(KC_WBAK, KC_WFWD, KC_WSTP, S(C(KC_TAB)), C(KC_TAB),
+                        KC_CYCLE_LAYERS),
+    /*
+        |               |                        |  Knob : Arrow Left/Right    |
+        | Slack Status  |    Zoom Toggle Mute    |     Enter          |
+        |  WinScrnSht   |        Task View       |  Cycle Layers      |
+     */
+    [_MACRO] = LAYOUT(C(S(KC_Y)), A(KC_A), KC_ENT, G(S(KC_S)), G(KC_TAB),
+                      KC_CYCLE_LAYERS),
+    /*
+        |               |                        |  Knob : Page Up/Down    |
+        |      F13      |          F14           |        F15         |
+        |      F16      |          F17           |  Cycle Layers      |
+     */
+    [_FUNC] = LAYOUT(KC_F13, KC_F14, KC_F15, KC_F16, KC_F17, KC_CYCLE_LAYERS)};
+
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [_MEDIA] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [_BROWSER] = {ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)},
+    [_MACRO] = {ENCODER_CCW_CW(KC_RIGHT, KC_LEFT)},
+    [_FUNC] = {ENCODER_CCW_CW(KC_PAGE_DOWN, KC_PAGE_UP)}};
+#endif
+
+uint8_t selected_layer = 0;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case KC_CYCLE_LAYERS: // custom macro
+    if (record->event.pressed) {
+      selected_layer++;
+      if (selected_layer > 2) {
+        selected_layer = 0;
+      }
+      layer_clear();
+      layer_on(selected_layer);
     }
-    else if (index == 1) {
-        if (clockwise) {
-            tap_code(KC_PGUP);
-        } else {
-            tap_code(KC_PGDN);
-        }
-    }
+    break;
+  }
+  return true;
 }
