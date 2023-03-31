@@ -2,7 +2,6 @@
 
 ![RLmc20230331_220842_RS_2](https://user-images.githubusercontent.com/57904667/229147497-1d151d16-4aa1-4451-8bbf-213ca4bdd751.jpg)
 
-*A short description of the keyboard/project*
 The Bento Macropad is a 5-key macropad with rotary encoder designed by Dwin17 (Discord: **Dwin#3766**, Reddit: **nguyedt**) with PCB designed by coarse (keyboard.coarse.tech).
 
 **Key features include in this fork:**
